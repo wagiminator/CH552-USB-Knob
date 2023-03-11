@@ -1,6 +1,6 @@
 // ===================================================================================
 // Project:   USB Rotary Encoder for CH551, CH552 and CH554
-// Version:   v1.0
+// Version:   v1.1
 // Year:      2023
 // Author:    Stefan Wagner
 // Github:    https://github.com/wagiminator
@@ -73,27 +73,28 @@ void main(void) {
 
   // Loop
   while(1) {
-    WDT_reset();                                              // reset watchdog
-    currentKey = 0;
-    if(!PIN_read(PIN_ENC_A)) {                                // encoder turned ?
-      if(PIN_read(PIN_ENC_B)) currentKey = KBD_CON_VOL_UP;    // clockwise?
-      else                    currentKey = KBD_CON_VOL_DOWN;  // counter-clockwise?
-      while(!PIN_read(PIN_ENC_A));                            // wait until next detent
+    WDT_reset();                                          // reset watchdog
+    currentKey = 0;                                       // clear key variable
+    if(!PIN_read(PIN_ENC_A)) {                            // encoder turned ?
+      if(PIN_read(PIN_ENC_B)) currentKey = CON_VOL_UP;    // clockwise?
+      else                    currentKey = CON_VOL_DOWN;  // counter-clockwise?
+      DLY_ms(10);                                         // debounce
+      while(!PIN_read(PIN_ENC_A));                        // wait until next detent
     } 
     else {
-      if(!isSwitchPressed && !PIN_read(PIN_ENC_SW)) {         // switch previously pressed?
-        currentKey = KBD_CON_VOL_MUTE;
+      if(!isSwitchPressed && !PIN_read(PIN_ENC_SW)) {     // switch previously pressed?
+        currentKey = CON_VOL_MUTE;
         isSwitchPressed = 1;
       }
-      else if(isSwitchPressed && PIN_read(PIN_ENC_SW)) {      // switch previously released?
+      else if(isSwitchPressed && PIN_read(PIN_ENC_SW)) {  // switch previously released?
         isSwitchPressed = 0;
       }
     }
-    KBD_press(currentKey);                                    // press corresponding key
-    if(!--cnt) {                                              // time to cycle hue?
-      NEO_writeHue(hue, 0); NEO_writeHue(hue, 0);             // set NeoPixels hue value
-      if(!hue--) hue = 191;                                   // cycle hue value
+    if(currentKey) CON_press(currentKey);                 // press corresponding key ...
+    else CON_releaseAll();                                // ... or release last key
+    if(!--cnt) {                                          // time to cycle hue?
+      NEO_writeHue(hue, 0); NEO_writeHue(hue, 0);         // set NeoPixels hue value
+      if(!hue--) hue = 191;                               // cycle hue value
     }
-    DLY_ms(1);                                                // a little delay (latch + debounce)
   }
 }

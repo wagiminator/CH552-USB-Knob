@@ -19,13 +19,16 @@
 // USB Endpoint Addresses and Sizes
 // ===================================================================================
 #define EP0_SIZE        64
-#define EP1_SIZE        8
+#define EP1_SIZE        16
+#define EP2_SIZE        16
 
 #define EP0_ADDR        0
 #define EP1_ADDR        (EP0_ADDR + EP0_BUF_SIZE)
+#define EP2_ADDR        (EP1_ADDR + EP1_BUF_SIZE)
 
 #define EP0_BUF_SIZE    EP_BUF_SIZE(EP0_SIZE)
 #define EP1_BUF_SIZE    EP_BUF_SIZE(EP1_SIZE)
+#define EP2_BUF_SIZE    EP_BUF_SIZE(EP2_SIZE)
 
 #define EP_BUF_SIZE(x)  (x+2<64 ? x+2 : 64)
 
@@ -37,6 +40,7 @@ typedef struct _USB_CFG_DESCR_HID {
   USB_ITF_DESCR interface0;
   USB_HID_DESCR hid0;
   USB_ENDP_DESCR ep1IN;
+  USB_ENDP_DESCR ep2OUT;
 } USB_CFG_DESCR_HID, *PUSB_CFG_DESCR_HID;
 typedef USB_CFG_DESCR_HID __xdata *PXUSB_CFG_DESCR_HID;
 

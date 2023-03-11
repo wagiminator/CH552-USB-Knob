@@ -14,8 +14,8 @@
 #define NEO_GRB                       // type of pixel: NEO_GRB or NEO_RGB
 
 // USB device descriptor
-#define USB_VENDOR_ID       0x16C0    // VID (shared www.voti.nl)
-#define USB_PRODUCT_ID      0x05DF    // PID (shared HID-keyboards)
+#define USB_VENDOR_ID       0x1209    // VID
+#define USB_PRODUCT_ID      0xC55D    // PID
 #define USB_DEVICE_VERSION  0x0100    // v1.0 (BCD-format)
 
 // USB configuration descriptor
