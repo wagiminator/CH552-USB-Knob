@@ -38,6 +38,8 @@ On Windows you will need the [Zadig tool](https://zadig.akeo.ie/) to install the
 ## Entering CH55x Bootloader Mode
 A brand new chip starts automatically in bootloader mode as soon as it is connected to the PC via USB. Once firmware has been uploaded, the bootloader must be started manually for new uploads. To do this, the board must first be disconnected from the USB port and all voltage sources. Now press the BOOT button and keep it pressed while reconnecting the board to the USB port of your PC. The chip now starts again in bootloader mode, the BOOT button can be released and new firmware can be uploaded within the next couple of seconds.
 
+Once the USB Knob firmware is installed, the bootloader can also be entered by holding down the rotary encoder switch while connecting the device to the USB port. In this way, the case does not have to be opened when new firmware is to be installed. The NeoPixels will then light up white as long as the device is in bootloader mode (approx. 10 seconds).
+
 ## Compiling and Uploading Firmware
 Open a terminal and navigate to the folder with the makefile. Run ```make flash``` to compile and upload the firmware. If you don't want to compile the firmware yourself, you can also upload the precompiled binary. To do this, just run ```python3 ./tools/chprog.py usb_knob.bin```.
 

@@ -1,6 +1,6 @@
 // ===================================================================================
 // Project:   USB Rotary Encoder for CH551, CH552 and CH554
-// Version:   v1.1
+// Version:   v1.2
 // Year:      2023
 // Author:    Stefan Wagner
 // Github:    https://github.com/wagiminator
@@ -34,7 +34,10 @@
 // -----------------------
 // - Connect the board via USB to your PC. It should be detected as a HID device.
 // - Turn the rotary endoder to increase/decrease volume.
-// - Press rotary encoder button to mute.
+// - Press rotary encoder button to mute/unmute.
+// - To enter bootloader hold down the rotary encoder switch while connecting the 
+//   device to USB. The NeoPixels will light up white as long as the device is in 
+//   bootloader mode (about 10 seconds).
 
 
 // ===================================================================================
@@ -58,17 +61,26 @@ void USB_ISR(void) __interrupt(INT_NO_USB) {
 // Main Function
 // ===================================================================================
 void main(void) {
+
   // Variables
+  uint8_t i;                              // temp variable
   uint8_t cnt = 1;                        // hue cycle counter
   uint8_t hue = 0;                        // hue cycle value
   uint8_t currentKey;                     // current key to be sent
   __bit isSwitchPressed = 0;              // state of rotary encoder switch
 
+  // Enter bootloader if encoder switch is pressed
+  NEO_init();                             // init NeoPixels
+  if(!PIN_read(PIN_ENC_SW)) {             // encoder switch pressed?
+    NEO_latch();                          // make sure pixels are ready
+    for(i=6; i; i--) NEO_sendByte(127);   // light up all pixels
+    BOOT_now();                           // enter bootloader
+  }
+
   // Setup
   CLK_config();                           // configure system clock
   DLY_ms(5);                              // wait for clock to settle
   KBD_init();                             // init USB HID keyboard
-  NEO_init();                             // init NeoPixel
   WDT_start();                            // start watchdog timer
 
   // Loop
