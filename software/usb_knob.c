@@ -1,6 +1,6 @@
 // ===================================================================================
 // Project:   USB Rotary Encoder for CH551, CH552 and CH554
-// Version:   v1.2
+// Version:   v1.3
 // Year:      2023
 // Author:    Stefan Wagner
 // Github:    https://github.com/wagiminator
@@ -69,18 +69,20 @@ void main(void) {
   uint8_t currentKey;                     // current key to be sent
   __bit isSwitchPressed = 0;              // state of rotary encoder switch
 
-  // Enter bootloader if encoder switch is pressed
+  // Setup
   NEO_init();                             // init NeoPixels
+  CLK_config();                           // configure system clock
+  DLY_ms(10);                             // wait for clock to settle
+
+  // Enter bootloader if encoder switch is pressed
   if(!PIN_read(PIN_ENC_SW)) {             // encoder switch pressed?
-    NEO_latch();                          // make sure pixels are ready
     for(i=6; i; i--) NEO_sendByte(127);   // light up all pixels
     BOOT_now();                           // enter bootloader
   }
 
-  // Setup
-  CLK_config();                           // configure system clock
-  DLY_ms(5);                              // wait for clock to settle
+  // Init keyboard
   KBD_init();                             // init USB HID keyboard
+  DLY_ms(500);                            // wait for Windows...
   WDT_start();                            // start watchdog timer
 
   // Loop
