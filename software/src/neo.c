@@ -1,5 +1,5 @@
 // ===================================================================================
-// NeoPixel (Addressable LED) Functions for CH551, CH552 and CH554            * v1.0 *
+// NeoPixel (Addressable LED) Functions for CH551, CH552 and CH554            * v1.1 *
 // ===================================================================================
 //
 // Basic control functions for 800kHz addressable LEDs (NeoPixel). A simplified 
@@ -28,7 +28,7 @@
 // - T1H (HIGH-time for "1"-bit) must be min.  625ns
 // - TCT (total clock time) must be      min. 1150ns
 // The bit transmission loop takes 11 clock cycles.
-#if FREQ_SYS == 24000000    // 24 MHz system clock
+#if F_CPU == 24000000       // 24 MHz system clock
   #define T1H_DELAY \
     nop             \
     nop             \
@@ -48,7 +48,7 @@
     nop             \
     nop             \
     nop                     // 28 - 11 - 11 = 6 clock cycles for min 1150ns
-#elif FREQ_SYS == 16000000  // 16 MHz system clock
+#elif F_CPU == 16000000     // 16 MHz system clock
   #define T1H_DELAY \
     nop             \
     nop             \
@@ -59,14 +59,14 @@
   #define TCT_DELAY \
     nop             \
     nop                     // 19 - 6 - 11 = 2 clock cycles for min 1150ns
-#elif FREQ_SYS == 12000000  // 12 MHz system clock
+#elif F_CPU == 12000000     // 12 MHz system clock
   #define T1H_DELAY \
     nop             \
     nop             \
     nop             \
     nop                     // 8 - 4 = 4 clock cycles for min 625ns
   #define TCT_DELAY         // 14 - 4 - 11 < 0 clock cycles for min 1150ns
-#elif FREQ_SYS == 6000000   // 13 MHz system clock
+#elif F_CPU == 6000000      // 13 MHz system clock
   #define T1H_DELAY         // 4 - 4 = 0 clock cycles for min 625ns
   #define TCT_DELAY         // 7 - 0 - 11 < 0 clock cycles for min 1150ns
 #else

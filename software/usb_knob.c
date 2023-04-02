@@ -23,12 +23,14 @@
 // Compilation Instructions:
 // -------------------------
 // - Chip:  CH551, CH552 or CH554
-// - Clock: min. 12 MHz internal
-// - Adjust the firmware parameters in include/config.h if necessary.
+// - Clock: 16 MHz internal
+// - Adjust the firmware parameters in src/config.h if necessary.
 // - Make sure SDCC toolchain and Python3 with PyUSB is installed.
 // - Press BOOT button on the board and keep it pressed while connecting it via USB
 //   with your PC.
-// - Run 'make flash'.
+// - Run 'make flash' immediatly afterwards.
+// - To compile the firmware using the Arduino IDE, follow the instructions in the 
+//   .ino file.
 //
 // Operating Instructions:
 // -----------------------
@@ -45,11 +47,11 @@
 // ===================================================================================
 
 // Libraries
-#include <config.h>                       // user configurations
-#include <system.h>                       // system functions
-#include <delay.h>                        // delay functions
-#include <neo.h>                          // NeoPixel functions
-#include <usb_conkbd.h>                   // USB HID consumer keyboard functions
+#include "src/config.h"                   // user configurations
+#include "src/system.h"                   // system functions
+#include "src/delay.h"                    // delay functions
+#include "src/neo.h"                      // NeoPixel functions
+#include "src/usb_conkbd.h"               // USB HID consumer keyboard functions
 
 // Prototypes for used interrupts
 void USB_interrupt(void);
@@ -80,7 +82,7 @@ void main(void) {
     BOOT_now();                           // enter bootloader
   }
 
-  // Init keyboard
+  // Init USB keyboard
   KBD_init();                             // init USB HID keyboard
   DLY_ms(500);                            // wait for Windows...
   WDT_start();                            // start watchdog timer

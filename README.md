@@ -17,15 +17,8 @@ The CH552E is a low-cost, enhanced E8051 core microcontroller compatible with th
 ![USB_Knob_pic2.jpg](https://raw.githubusercontent.com/wagiminator/CH552-USB-Knob/main/documentation/USB_Knob_pic2.jpg)
 
 # Compiling and Installing Firmware
-## Installing Toolchain for CH55x
-Install the [CH55x Software Development Kit for the SDCC compiler](https://github.com/Blinkinlabs/ch554_sdcc). Follow the instructions on the website. In order for the programming tool to work, Python3 must be installed on your system. To do this, follow these [instructions](https://www.pythontutorial.net/getting-started/install-python/). In addition [PyUSB](https://github.com/pyusb/pyusb) must be installed. On Linux (Debian-based), all of this can be done with the following commands:
-
-```
-sudo apt install build-essential sdcc python3 python3-pip
-sudo pip install pyusb
-```
-
-## Installing Drivers for the CH55x Bootloader
+## Preparing the CH55x Bootloader
+### Installing Drivers for the CH55x Bootloader
 On Linux you do not need to install a driver. However, by default Linux will not expose enough permission to upload your code with the USB bootloader. In order to fix this, open a terminal and run the following commands:
 
 ```
@@ -33,15 +26,41 @@ echo 'SUBSYSTEM=="usb", ATTR{idVendor}=="4348", ATTR{idProduct}=="55e0", MODE="6
 sudo service udev restart
 ```
 
-On Windows you will need the [Zadig tool](https://zadig.akeo.ie/) to install the correct driver for the CH55x bootloader. Click "Options" and "List All Devices" to select the USB module, then install the libusb-win32 driver.
+On Windows you will need the [Zadig tool](https://zadig.akeo.ie/) to install the correct driver. Click "Options" and "List All Devices" to select the USB module, then install the libusb-win32 driver. To do this, the board must be connected and the CH55x must be in bootloader mode.
 
-## Entering CH55x Bootloader Mode
+### Entering CH55x Bootloader Mode
 A brand new chip starts automatically in bootloader mode as soon as it is connected to the PC via USB. Once firmware has been uploaded, the bootloader must be started manually for new uploads. To do this, the board must first be disconnected from the USB port and all voltage sources. Now press the BOOT button and keep it pressed while reconnecting the board to the USB port of your PC. The chip now starts again in bootloader mode, the BOOT button can be released and new firmware can be uploaded within the next couple of seconds.
 
-Once the USB Knob firmware is installed, the bootloader can also be entered by holding down the rotary encoder switch while connecting the device to the USB port. In this way, the case does not have to be opened when new firmware is to be installed. The NeoPixels will then light up white as long as the device is in bootloader mode (approx. 10 seconds).
+## Compiling and Uploading using the makefile
+### Installing SDCC Toolchain for CH55x
+Install the [SDCC Compiler](https://sdcc.sourceforge.net/). In order for the programming tool to work, Python3 must be installed on your system. To do this, follow these [instructions](https://www.pythontutorial.net/getting-started/install-python/). In addition [pyusb](https://github.com/pyusb/pyusb) must be installed. On Linux (Debian-based), all of this can be done with the following commands:
 
-## Compiling and Uploading Firmware
-Open a terminal and navigate to the folder with the makefile. Run ```make flash``` to compile and upload the firmware. If you don't want to compile the firmware yourself, you can also upload the precompiled binary. To do this, just run ```python3 ./tools/chprog.py usb_knob.bin```.
+```
+sudo apt install build-essential sdcc python3 python3-pip
+sudo pip install pyusb
+```
+
+### Compiling and Uploading Firmware
+- Open a terminal.
+- Navigate to the folder with the makefile. 
+- Connect the board and make sure the CH55x ist in bootloader mode. 
+- Run ```make flash``` to compile and upload the firmware. 
+- If you don't want to compile the firmware yourself, you can also upload the precompiled binary. To do this, just run ```python3 ./tools/chprog.py usb_knob.bin```.
+
+## Compiling and Uploading using the Arduino IDE
+### Installing the Arduino IDE and CH55xduino
+Install the [Arduino IDE](https://www.arduino.cc/en/software) if you haven't already. Install the [CH55xduino](https://github.com/DeqingSun/ch55xduino) package by following the instructions on the website.
+
+### Compiling and Uploading Firmware
+- Copy the .ino and .c files as well as the /src folder together into one folder and name it like the .ino file. 
+- Open the .ino file in the Arduino IDE.
+- Go to **Tools -> Board -> CH55x Boards** and select **CH552 Board**.
+- Go to **Tools** and choose the following board options:
+  - **Clock Source:**   16 MHz (internal)
+  - **Upload Method:**  USB
+  - **USB Settings:**   USER CODE /w 266B USB RAM
+- Connect the board and make sure the CH55x ist in bootloader mode. 
+- Click **Upload**.
 
 # References, Links and Notes
 1. [EasyEDA Design Files](https://oshwlab.com/wagiminator)
