@@ -45,7 +45,7 @@ sudo pip install pyusb
 ### Compiling and Uploading Firmware
 - Open a terminal.
 - Navigate to the folder with the makefile. 
-- Connect the board and make sure the CH55x ist in bootloader mode. 
+- Connect the board and make sure the CH55x is in bootloader mode. 
 - Run ```make flash``` to compile and upload the firmware. 
 - If you don't want to compile the firmware yourself, you can also upload the precompiled binary. To do this, just run ```python3 ./tools/chprog.py usb_knob.bin```.
 
@@ -60,7 +60,7 @@ Install the [Arduino IDE](https://www.arduino.cc/en/software) if you haven't alr
   - **Clock Source:**   16 MHz (internal)
   - **Upload Method:**  USB
   - **USB Settings:**   USER CODE /w 266B USB RAM
-- Connect the board and make sure the CH55x ist in bootloader mode. 
+- Connect the board and make sure the CH55x is in bootloader mode. 
 - Click **Upload**.
 
 # References, Links and Notes
