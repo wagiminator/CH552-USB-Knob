@@ -11,7 +11,6 @@
 // ===================================================================================
 __xdata __at (EP0_ADDR) uint8_t EP0_buffer[EP0_BUF_SIZE];     
 __xdata __at (EP1_ADDR) uint8_t EP1_buffer[EP1_BUF_SIZE];
-__xdata __at (EP2_ADDR) uint8_t EP2_buffer[EP2_BUF_SIZE];
 
 #define USB_setupBuf ((PUSB_SETUP_REQ)EP0_buffer)
 extern uint8_t SetupReq;
@@ -22,7 +21,6 @@ extern uint8_t SetupReq;
 void HID_setup(void);
 void HID_reset(void);
 void HID_EP1_IN(void);
-void HID_EP2_OUT(void);
 
 // ===================================================================================
 // USB Handler Defines
@@ -36,7 +34,6 @@ void HID_EP2_OUT(void);
 #define EP0_IN_callback     USB_EP0_IN
 #define EP0_OUT_callback    USB_EP0_OUT
 #define EP1_IN_callback     HID_EP1_IN
-#define EP2_OUT_callback    HID_EP2_OUT
 
 // ===================================================================================
 // Functions

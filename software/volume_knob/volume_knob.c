@@ -1,6 +1,6 @@
 // ===================================================================================
-// Project:   USB Rotary Encoder for CH551, CH552 and CH554
-// Version:   v1.3
+// Project:   USB Rotary Encoder for CH551, CH552 and CH554 - Volume Control
+// Version:   v1.4
 // Year:      2023
 // Author:    Stefan Wagner
 // Github:    https://github.com/wagiminator
@@ -35,7 +35,7 @@
 // Operating Instructions:
 // -----------------------
 // - Connect the board via USB to your PC. It should be detected as a HID device.
-// - Turn the rotary endoder to increase/decrease volume.
+// - Turn the rotary encoder to increase/decrease volume.
 // - Press rotary encoder button to mute/unmute.
 // - To enter bootloader hold down the rotary encoder switch while connecting the 
 //   device to USB. The NeoPixels will light up white as long as the device is in 
@@ -51,7 +51,7 @@
 #include "src/system.h"                   // system functions
 #include "src/delay.h"                    // delay functions
 #include "src/neo.h"                      // NeoPixel functions
-#include "src/usb_conkbd.h"               // USB HID consumer keyboard functions
+#include "src/usb_consumer.h"             // USB HID consumer keyboard functions
 
 // Prototypes for used interrupts
 void USB_interrupt(void);
@@ -68,7 +68,6 @@ void main(void) {
   uint8_t i;                              // temp variable
   uint8_t cnt = 1;                        // hue cycle counter
   uint8_t hue = 0;                        // hue cycle value
-  uint8_t currentKey;                     // current key to be sent
   __bit isSwitchPressed = 0;              // state of rotary encoder switch
 
   // Setup
@@ -83,34 +82,34 @@ void main(void) {
   }
 
   // Init USB keyboard
-  KBD_init();                             // init USB HID keyboard
+  HID_init();                             // init USB HID consumer keyboard
   DLY_ms(500);                            // wait for Windows...
   WDT_start();                            // start watchdog timer
 
   // Loop
   while(1) {
-    WDT_reset();                                          // reset watchdog
-    currentKey = 0;                                       // clear key variable
     if(!PIN_read(PIN_ENC_A)) {                            // encoder turned ?
-      if(PIN_read(PIN_ENC_B)) currentKey = CON_VOL_UP;    // clockwise?
-      else                    currentKey = CON_VOL_DOWN;  // counter-clockwise?
+      if(PIN_read(PIN_ENC_B)) CON_press(CON_VOL_UP);      // clockwise? -> press vol up
+      else                    CON_press(CON_VOL_DOWN);    // counter-clockwise? -> press vol down
       DLY_ms(10);                                         // debounce
+      CON_release();                                      // release key
       while(!PIN_read(PIN_ENC_A));                        // wait until next detent
     } 
     else {
       if(!isSwitchPressed && !PIN_read(PIN_ENC_SW)) {     // switch previously pressed?
-        currentKey = CON_VOL_MUTE;
+        CON_press(CON_VOL_MUTE);                          // press volume mute key
         isSwitchPressed = 1;
       }
       else if(isSwitchPressed && PIN_read(PIN_ENC_SW)) {  // switch previously released?
-        isSwitchPressed = 0;
+        CON_release();                                    // release volume mute key
+        isSwitchPressed = 0;                              // update switch state
       }
     }
-    if(currentKey) CON_press(currentKey);                 // press corresponding key ...
-    else CON_releaseAll();                                // ... or release last key
     if(!--cnt) {                                          // time to cycle hue?
       NEO_writeHue(hue, 0); NEO_writeHue(hue, 0);         // set NeoPixels hue value
       if(!hue--) hue = 191;                               // cycle hue value
     }
+    DLY_ms(1);                                            // slow down a little
+    WDT_reset();                                          // reset watchdog
   }
 }

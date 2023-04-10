@@ -93,6 +93,9 @@ void USB_EP0_SETUP(void) {
                 #ifdef USB_STR_DESCR_i9
                 case 9:   pDescr = USB_STR_DESCR_i9; break;
                 #endif
+                #ifdef USB_STR_DESCR_ixee
+                case 0xee: pDescr = USB_STR_DESCR_ixee; break;
+                #endif
                 default:  pDescr = USB_STR_DESCR_ix; break;
               }
               len = pDescr[0];                    // descriptor length

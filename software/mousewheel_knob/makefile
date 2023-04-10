@@ -8,8 +8,8 @@
 # ===================================================================================
 
 # Input and Output File Names
-SKETCH     = usb_knob.c
-TARGET     = usb_knob
+SKETCH     = mousewheel_knob.c
+TARGET     = mousewheel_knob
 INCLUDE    = src
 
 # Microcontroller Settings
